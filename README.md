@@ -2,6 +2,12 @@
 
 A responsive invoice manager built with Next.js, React, TypeScript, Ant Design, and Zustand, based on the supplied Frontend Mentor Figma designs. Create invoices, manage drafts, and track payment status in light or dark mode.
 
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Ant Design](https://img.shields.io/badge/Ant%20Design-6-1677FF?logo=antdesign&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-5-433E38)
+![Cypress](https://img.shields.io/badge/Cypress-16-69D3A7?logo=cypress&logoColor=white)
+
 ## Live Demo
 
 [Open Invoice App](https://invoice-app-azure-ten.vercel.app/)
@@ -45,15 +51,15 @@ Captured from the live deployment.
 
 ## Tech Stack
 
-| Area | Technology |
-| --- | --- |
-| Framework | Next.js 16 (App Router), React 19 |
-| Language | TypeScript |
-| UI | Ant Design 6, custom CSS |
-| State and persistence | Zustand 5, localStorage |
-| Date input support | Day.js |
-| Testing | Node.js test runner, Cypress |
-| Tooling | pnpm, ESLint |
+| Area                  | Technology                        |
+| --------------------- | --------------------------------- |
+| Framework             | Next.js 16 (App Router), React 19 |
+| Language              | TypeScript                        |
+| UI                    | Ant Design 6, custom CSS          |
+| State and persistence | Zustand 5, localStorage           |
+| Date input support    | Day.js                            |
+| Testing               | Node.js test runner, Cypress      |
+| Tooling               | pnpm, ESLint                      |
 
 ## Architecture
 
@@ -84,15 +90,15 @@ This is a frontend application. The store persists invoices and theme preference
 
 ## Testing
 
-| Command | Purpose |
-| --- | --- |
-| `pnpm lint` | ESLint checks |
-| `pnpm exec tsc --noEmit` | Application type checks |
-| `pnpm test` | Invoice rule tests |
-| `pnpm test:e2e:types` | Cypress type checks |
-| `pnpm test:e2e` | Cypress against a dedicated development server |
+| Command                    | Purpose                                           |
+| -------------------------- | ------------------------------------------------- |
+| `pnpm lint`                | ESLint checks                                     |
+| `pnpm exec tsc --noEmit`   | Application type checks                           |
+| `pnpm test`                | Invoice rule tests                                |
+| `pnpm test:e2e:types`      | Cypress type checks                               |
+| `pnpm test:e2e`            | Cypress against a dedicated development server    |
 | `pnpm test:e2e:production` | Build and run Cypress against a production server |
-| `pnpm build` | Production build |
+| `pnpm build`               | Production build                                  |
 
 Unit tests cover date boundaries, monetary rounding, invoice validation, and ID generation. The Cypress suite contains **19 tests across three specs**, covering invoice creation and editing, drafts, status changes, filtering, deletion, missing records, persistence, and layouts at mobile (375px), tablet (768px), and desktop (1440px) widths.
 
