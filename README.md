@@ -62,4 +62,4 @@ The Cypress install script is explicitly approved in `pnpm-workspace.yaml`. If t
 
 ## Storage
 
-Althouh backend API integration is possible. This is a frontend application. Invoices are saved in this browser under `invoice-app-v1` in localStorage and seeded from `app/_data.json` on first use. Clearing browser storage resets them. Data is not synchronized between devices, and Save & Send sets an invoice to pending without sending an email.
+Although backend API integration is possible. This is a frontend application. Invoices are saved in this browser under `invoice-app-v1` in localStorage and seeded from `app/_data.json` on first use. Clearing browser storage resets them. Data is not synchronized between devices, and Save & Send sets an invoice to pending without sending an email.
