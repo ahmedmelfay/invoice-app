@@ -1,6 +1,6 @@
 # Invoice App
 
-A responsive invoice manager implemented from the supplied Figma designs with Next.js 16, React 19, TypeScript, Ant Design, and Zustand.
+A responsive invoice manager implemented from the supplied Figma (Frontend Mentor) designs with Next.js 16, React 19, TypeScript, Ant Design, and Zustand.
 
 ## Run locally
 
@@ -62,4 +62,4 @@ The Cypress install script is explicitly approved in `pnpm-workspace.yaml`. If t
 
 ## Storage
 
-This is a frontend application. Invoices are saved in this browser under `invoice-app-v1` in localStorage and seeded from `app/_data.json` on first use. Clearing browser storage resets them. Data is not synchronized between devices, and Save & Send sets an invoice to pending without sending an email.
+Althouh backend API integration is possible. This is a frontend application. Invoices are saved in this browser under `invoice-app-v1` in localStorage and seeded from `app/_data.json` on first use. Clearing browser storage resets them. Data is not synchronized between devices, and Save & Send sets an invoice to pending without sending an email.
