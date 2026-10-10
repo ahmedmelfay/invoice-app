@@ -27,7 +27,9 @@ A responsive invoice manager implemented from the supplied Figma designs with Ne
 
 `features/invoices/lib/invoice.ts` contains pure invoice rules: ID generation, validation, dates, totals, and formatting. `features/invoices/store.ts` owns state transitions and versioned persistence through Zustand. Browser hydration is explicit so saved records are restored before detail lookup or creation.
 
-`app/globals.css` defines semantic color tokens and responsive layouts. Design assets live in `public/assets/`; the private Figma source remains ignored.
+Ant Design `Form`, `Form.Item`, and `Form.List` own field state, rules, validation messages, and dynamic line items. `Input`, `InputNumber`, `DatePicker`, and `Select` provide the entry controls; incomplete drafts deliberately bypass validation. `Table`, `Tag`, `Empty`, `Avatar`, and `Button` supply shared presentation. `ConfigProvider` defines light/dark tokens and component defaults, with scoped overrides for drawer fields and button variants.
+
+`app/globals.css` contains the remaining Figma layout, responsive behavior, and document-specific styles; native field, button-color, and table rules have been removed. Design assets live in `public/assets/`; the private Figma source remains ignored.
 
 ## Validation
 

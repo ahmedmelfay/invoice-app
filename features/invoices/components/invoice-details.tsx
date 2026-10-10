@@ -2,7 +2,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Modal } from "antd";
+import { Empty, Modal, Table } from "antd";
 import { useState } from "react";
 import { InvoiceButton } from "@/app/_components/invoice-button";
 import { InvoiceStatusTag } from "@/app/_components/Invoice-status-tag";
@@ -45,8 +45,14 @@ export function InvoiceDetails({ id }: { id: string }) {
       <>
         {back}
         <section className="empty-state">
-          <h1>Invoice not found</h1>
-          <p>This invoice may have been deleted.</p>
+          <Empty
+            description={
+              <>
+                <h1>Invoice not found</h1>
+                <p>This invoice may have been deleted.</p>
+              </>
+            }
+          />
         </section>
       </>
     );
@@ -105,31 +111,46 @@ export function InvoiceDetails({ id }: { id: string }) {
           </div>
         </div>
         <div className="line-items">
-          <table>
-            <thead>
-              <tr>
-                <th>Item Name</th>
-                <th>QTY.</th>
-                <th>Price</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoice.items.map((item, index) => (
-                <tr key={index}>
-                  <td>
-                    <strong>{item.name || "Unnamed item"}</strong>
+          <Table
+            className="invoice-items-table"
+            pagination={false}
+            size="small"
+            rowKey="key"
+            dataSource={invoice.items.map((item, key) => ({ ...item, key }))}
+            columns={[
+              {
+                title: "Item Name",
+                dataIndex: "name",
+                render: (name, item) => (
+                  <>
+                    <strong>{name || "Unnamed item"}</strong>
                     <span className="mobile-item-price">
                       {item.quantity} x {money(item.price)}
                     </span>
-                  </td>
-                  <td>{item.quantity}</td>
-                  <td>{money(item.price)}</td>
-                  <td>{money(item.total)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </>
+                ),
+              },
+              {
+                title: "QTY.",
+                dataIndex: "quantity",
+                align: "right",
+                responsive: ["md"],
+              },
+              {
+                title: "Price",
+                dataIndex: "price",
+                align: "right",
+                responsive: ["md"],
+                render: money,
+              },
+              {
+                title: "Total",
+                dataIndex: "total",
+                align: "right",
+                render: money,
+              },
+            ]}
+          />
           <div className="amount-due">
             <span>Amount Due</span>
             <strong>{money(invoice.total)}</strong>
@@ -140,6 +161,7 @@ export function InvoiceDetails({ id }: { id: string }) {
         open={deleting}
         getContainer={false}
         centered
+        closable={false}
         title="Confirm Deletion"
         onCancel={() => setDeleting(false)}
         className="delete-modal"

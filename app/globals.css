@@ -119,9 +119,6 @@ p {
   display: grid;
   place-items: center;
 }
-.avatar img {
-  border-radius: 50%;
-}
 .main-content {
   max-width: 730px;
   margin: 0 auto;
@@ -178,20 +175,8 @@ h2 {
   box-shadow: 0 10px 20px #48549f40;
 }
 .invoice-button.ant-btn {
-  height: 48px;
-  padding: 0 24px;
-  border: 0;
-  border-radius: 24px;
   font-size: 15px;
   letter-spacing: -0.25px;
-  font-weight: 700;
-  box-shadow: none;
-  background: #7c5dfa;
-  color: white;
-}
-.invoice-button.ant-btn:hover {
-  background: #9277ff !important;
-  color: white !important;
 }
 .invoice-button.button-create {
   padding: 8px 17px 8px 8px;
@@ -204,32 +189,6 @@ h2 {
   height: 32px;
   border-radius: 50%;
   background: white;
-}
-.invoice-button.button-secondary,
-.invoice-button.button-wide {
-  color: var(--muted);
-  background: var(--soft);
-}
-.invoice-button.button-secondary:hover,
-.invoice-button.button-wide:hover {
-  background: var(--border) !important;
-  color: var(--muted) !important;
-}
-.invoice-button.button-danger {
-  background: #ec5757;
-}
-.invoice-button.button-danger:hover {
-  background: #ff9797 !important;
-}
-.invoice-button.button-black {
-  background: #373b53;
-  color: #888eb0;
-}
-.invoice-button.button-black:hover {
-  background: #0c0e16 !important;
-}
-.invoice-button.button-wide {
-  width: 100%;
 }
 .invoice-list {
   display: grid;
@@ -312,7 +271,7 @@ h2 {
   text-align: center;
   margin: 140px auto 0;
 }
-.empty-state > img {
+.empty-state .ant-empty-image {
   margin: 0 auto 64px;
 }
 .empty-state h2 {
@@ -423,32 +382,24 @@ address span {
   border-radius: 8px;
   overflow: hidden;
 }
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 28px;
-  padding: 0 32px;
+.invoice-items-table .ant-table {
+  background: transparent;
 }
-th {
-  font-weight: 500;
-  color: var(--muted);
-  font-size: 13px;
+.invoice-items-table .ant-table-container {
+  padding: 16px 24px;
 }
-th,
-td {
-  text-align: right;
+.invoice-items-table .ant-table-cell {
+  background: transparent !important;
+  border: 0 !important;
 }
-th:first-child,
-td:first-child {
-  text-align: left;
-}
-td {
+.invoice-items-table .ant-table-tbody .ant-table-cell {
   font-size: 15px;
   font-weight: 700;
 }
-td:nth-child(2),
-td:nth-child(3) {
+.invoice-items-table .ant-table-thead .ant-table-cell {
   color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
 }
 .amount-due {
   background: var(--total);
@@ -473,9 +424,6 @@ td:nth-child(3) {
   color: #888eb0;
   line-height: 22px;
   margin-top: 12px;
-}
-.delete-modal .ant-modal-close {
-  display: none;
 }
 .invoice-drawer .ant-drawer-content {
   background: var(--surface);
@@ -508,58 +456,12 @@ td:nth-child(3) {
   font-weight: 700;
   margin-bottom: 24px;
 }
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  margin-bottom: 24px;
-  min-width: 0;
-  color: var(--muted);
-}
-.form-field > span {
-  display: flex;
-  justify-content: space-between;
-  gap: 5px;
-}
-.form-field small {
-  color: #ec5757;
-  font-size: 10px;
-}
-.form-field input,
-.form-field select {
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  border-radius: 4px;
-  padding: 0 19px;
-  height: 48px;
-  width: 100%;
-  min-width: 0;
-  font-size: 15px;
-  font-weight: 700;
-  outline: none;
-  color-scheme: light;
-}
-.drawer-dark input,
-.drawer-dark select {
-  color-scheme: dark;
-}
-.form-field input:focus,
-.form-field select:focus {
-  border-color: #9277ff;
-}
-.form-field.field-error {
-  color: #ec5757;
-}
-.field-error input {
-  border-color: #ec5757;
-}
 .address-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
 }
-.address-grid .form-field {
+.address-grid .ant-form-item {
   margin-bottom: 0;
 }
 .date-grid {
@@ -582,15 +484,6 @@ td:nth-child(3) {
   gap: 16px;
   align-items: start;
 }
-.item-grid input {
-  padding: 0 12px;
-}
-.item-grid input[type="number"] {
-  appearance: textfield;
-}
-.item-grid input::-webkit-inner-spin-button {
-  appearance: none;
-}
 .item-total {
   display: flex;
   flex-direction: column;
@@ -603,7 +496,7 @@ td:nth-child(3) {
 .delete-item {
   border: 0;
   background: transparent;
-  margin-top: 39px;
+  margin-top: 31px;
   padding: 0;
 }
 .delete-item:hover {
@@ -618,9 +511,6 @@ td:nth-child(3) {
 .form-actions > div {
   display: flex;
   gap: 8px;
-}
-.form-actions:has(> .invoice-button + .invoice-button) {
-  justify-content: flex-end;
 }
 .form-errors {
   color: #ec5757;
@@ -695,7 +585,7 @@ td:nth-child(3) {
     height: 72px;
     width: 80px;
   }
-  .avatar img {
+  .avatar .ant-avatar {
     width: 32px;
     height: 32px;
   }
@@ -780,7 +670,7 @@ td:nth-child(3) {
   .empty-state {
     margin-top: 100px;
   }
-  .empty-state > img {
+  .empty-state .ant-empty-image {
     margin-bottom: 40px;
   }
   .details-page {
@@ -825,13 +715,10 @@ td:nth-child(3) {
   .sent-to {
     grid-column: 1 / -1;
   }
-  table {
-    padding: 0 24px;
-    border-spacing: 0 24px;
+  .invoice-items-table .ant-table-container {
+    padding: 16px;
   }
-  thead,
-  td:nth-child(2),
-  td:nth-child(3) {
+  .invoice-items-table .ant-table-thead {
     display: none;
   }
   .mobile-item-price {
@@ -885,9 +772,6 @@ td:nth-child(3) {
   .item-grid > :first-child {
     grid-column: 1 / -1;
     margin-bottom: 0;
-  }
-  .item-grid .form-field > span {
-    flex-wrap: wrap;
   }
   .item-total {
     gap: 25px;
@@ -943,21 +827,64 @@ td:nth-child(3) {
   }
 }
 
-.invoice-drawer .ant-drawer-content {
-  background: var(--surface) !important;
-}
 .invoice-drawer .ant-drawer-footer {
   background: var(--surface);
 }
 .drawer-dark {
   --surface: #141625;
-  --input: #1e2139;
-}
-.form-field input,
-.form-field select {
-  background: var(--input, var(--surface));
 }
 .invoice-drawer .ant-drawer-body {
   scrollbar-width: thin;
   scrollbar-color: var(--border) var(--surface);
+}
+
+.invoice-drawer .ant-picker,
+.invoice-drawer .ant-input-number {
+  width: 100%;
+}
+.invoice-drawer .ant-input,
+.invoice-drawer .ant-input-number-input,
+.invoice-drawer .ant-select,
+.invoice-drawer .ant-picker-input input {
+  font-size: 15px;
+  font-weight: 700;
+}
+.invoice-drawer .ant-form-item {
+  min-width: 0;
+}
+.invoice-drawer .ant-form-item-label {
+  padding-bottom: 9px;
+}
+.invoice-drawer .ant-form-item-explain-error {
+  font-size: 12px;
+}
+.status.ant-tag {
+  margin: 0;
+  border: 0;
+}
+.theme-toggle.ant-btn {
+  height: auto;
+  border-radius: 0;
+  color: inherit;
+}
+.filter-button.ant-btn {
+  padding: 0;
+}
+.delete-item.ant-btn {
+  width: 24px;
+  min-width: 24px;
+  height: 32px;
+  padding: 0;
+}
+
+/* Match Table's md breakpoint so collapsed columns keep quantity and unit price. */
+@media (min-width: 701px) and (max-width: 767px) {
+  .invoice-items-table .mobile-item-price {
+    display: block;
+    color: var(--muted);
+    margin-top: 7px;
+  }
+  .invoice-items-table .ant-table-thead {
+    display: none;
+  }
 }

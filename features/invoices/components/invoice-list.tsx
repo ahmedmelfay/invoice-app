@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- Small local design assets retain their original SVG geometry. */
 "use client";
 import Link from "next/link";
-import { Checkbox, Dropdown } from "antd";
+import { Button, Checkbox, Dropdown, Empty } from "antd";
 import { useState } from "react";
 import { InvoiceButton } from "@/app/_components/invoice-button";
 import { InvoiceStatusTag } from "@/app/_components/Invoice-status-tag";
@@ -61,11 +61,11 @@ export function InvoiceList() {
               </div>
             )}
           >
-            <button className="filter-button">
+            <Button type="text" className="filter-button">
               <span className="desktop-label">Filter by status</span>
               <span className="mobile-label">Filter</span>
               <img src="/assets/icon-arrow-down.svg" alt="" />
-            </button>
+            </Button>
           </Dropdown>
           <InvoiceButton
             type="create"
@@ -105,8 +105,12 @@ export function InvoiceList() {
         ))}
       </div>
       {!visible.length && (
-        <section className="empty-state">
-          <img src="/assets/illustration-empty.svg" alt="" />
+        <Empty
+          className="empty-state"
+          image="/assets/illustration-empty.svg"
+          styles={{ image: { height: 200 } }}
+          description={false}
+        >
           <h2>There is nothing here</h2>
           <p>
             {filters.length ? (
@@ -119,7 +123,7 @@ export function InvoiceList() {
               </>
             )}
           </p>
-        </section>
+        </Empty>
       )}
       {creating && <InvoiceForm onClose={() => setCreating(false)} />}
     </>
