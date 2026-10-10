@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invoice App
 
-## Getting Started
+A responsive invoice manager implemented from the supplied Figma designs with Next.js 16, React 19, TypeScript, Ant Design, and Zustand.
 
-First, run the development server:
+## Run locally
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Install dependencies: `pnpm install`
+- Start development: `pnpm dev`
+- Open http://localhost:3000
+- Production build: `pnpm build`, then `pnpm start`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Responsive invoice list and detail routes, including mobile action bars.
+- Create invoices, save incomplete drafts, edit, and confirm deletion.
+- Validate required fields, email addresses, quantities, and prices.
+- Calculate payment deadlines and line totals; promote completed drafts to pending.
+- Mark pending invoices paid and filter by multiple statuses.
+- Light and dark themes; invoice and theme persistence across refreshes.
+- Keyboard navigation, labelled fields, validation announcements, and modal focus handling.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Architecture
 
-## Learn More
+`app/` owns routing and the server-rendered root layout. `/invoices/[id]` provides direct invoice links and handles missing records.
 
-To learn more about Next.js, take a look at the following resources:
+`features/invoices/components/` contains the application shell, invoice list, detail screen, and shared create/edit form. Client boundaries are limited to interactive components. Existing button and status components under `app/_components/` provide reusable presentation.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`features/invoices/lib/invoice.ts` contains pure invoice rules: ID generation, validation, dates, totals, and formatting. `features/invoices/store.ts` owns state transitions and versioned persistence through Zustand. Browser hydration is explicit so saved records are restored before detail lookup or creation.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`app/globals.css` defines semantic color tokens and responsive layouts. Design assets live in `public/assets/`; the private Figma source remains ignored.
 
-## Deploy on Vercel
+## Validation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `pnpm lint`
+- `pnpm exec tsc --noEmit`
+- `pnpm test`
+- `pnpm test:e2e:types`
+- `pnpm test:e2e`
+- `pnpm build`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Tests cover date boundaries, monetary rounding, validation, and ID generation. Browser checks cover draft creation, refresh persistence, draft editing, status transitions, confirmation cancellation/deletion, filtering, and mobile light/dark presentation.
+
+## Cypress end-to-end tests
+
+`pnpm test:e2e` starts a dedicated development server at `http://localhost:3100`, waits for it to become ready, runs Cypress headlessly in Chrome, and stops the server afterward. Install Chrome before running these scripts. The test server uses `.next-e2e` so it can run alongside the regular app on port 3000.
+
+`pnpm test:e2e:production` builds the app in the same isolated directory and runs the suite against a production server. Use this for release checks or CI.
+
+For interactive debugging, start `pnpm dev --port 3100` in one terminal, then run `pnpm cypress:open` in another. `pnpm cypress:run` runs against an already running server. Override the base URL when needed, for example `pnpm cypress:run --config baseUrl=http://localhost:3000`.
+
+The 19 tests in three specs under `cypress/e2e/` cover:
+
+- List/detail navigation, combined status filters, empty states, missing records, marking paid, and deletion with cancellation and confirmation.
+- Required-field focus, invalid email and numeric values, incomplete drafts, generated IDs, invoice creation, line item changes, totals/due dates, cancelled edits, draft promotion, and editing paid invoices.
+- Mobile (375px), tablet (768px), and desktop (1440px) layouts, horizontal overflow, visible actions, form bounds, and theme persistence.
+
+Each test starts with independent fixture records installed before browser hydration. Cypress runs in its own browser, and storage is cleared between tests, preserving the invoices in your normal browser. Tests use retryable assertions instead of fixed delays and do not suppress application errors. Failure screenshots are saved under `cypress/screenshots/` and ignored by Git.
+
+The Cypress install script is explicitly approved in `pnpm-workspace.yaml`. If the package is installed but its browser binary is missing, run `pnpm exec cypress install`.
+
+## Storage
+
+This is a frontend application. Invoices are saved in this browser under `invoice-app-v1` in localStorage and seeded from `app/_data.json` on first use. Clearing browser storage resets them. Data is not synchronized between devices, and Save & Send sets an invoice to pending without sending an email.

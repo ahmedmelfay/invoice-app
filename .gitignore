@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.vscode/
 /.pnp
 .pnp.*
 .yarn/*
@@ -12,9 +13,13 @@
 
 # testing
 /coverage
+/cypress/screenshots/
+/cypress/videos/
+/cypress/downloads/
 
 # next.js
 /.next/
+/.next-e2e/
 /out/
 
 # production
@@ -39,3 +44,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# project assets
+/invoice-app
+/invoice-app-figma
