@@ -1,65 +1,114 @@
 # Invoice App
 
-A responsive invoice manager implemented from the supplied Figma (Frontend Mentor) designs with Next.js 16, React 19, TypeScript, Ant Design, and Zustand.
+A responsive invoice manager built with Next.js, React, TypeScript, Ant Design, and Zustand, based on the supplied Frontend Mentor Figma designs. Create invoices, manage drafts, and track payment status in light or dark mode.
 
-## Run locally
+## Live Demo
 
-- Install dependencies: `pnpm install`
-- Start development: `pnpm dev`
-- Open http://localhost:3000
-- Production build: `pnpm build`, then `pnpm start`
+[Open Invoice App](https://invoice-app-azure-ten.vercel.app/)
+
+Invoices and theme preferences are stored in your browser. Changes are not synchronized between devices. **Save & Send** saves an invoice as pending; it does not send an email.
+
+## Screenshots
+
+Captured from the live deployment.
+
+### Desktop — Light
+
+![Invoice list in light mode](docs/screenshots/invoices-light.jpg)
+
+### Desktop — Dark
+
+![Invoice list in dark mode](docs/screenshots/invoices-dark.jpg)
+
+### Mobile
+
+<img src="docs/screenshots/invoices-mobile.jpg" alt="Invoice list on a 375px mobile viewport" width="375" />
+
+### Invoice Details
+
+![Invoice detail screen](docs/screenshots/invoice-details.jpg)
+
+### Invoice Form
+
+![New invoice form](docs/screenshots/invoice-form.jpg)
 
 ## Features
 
-- Responsive invoice list and detail routes, including mobile action bars.
-- Create invoices, save incomplete drafts, edit, and confirm deletion.
-- Validate required fields, email addresses, quantities, and prices.
-- Calculate payment deadlines and line totals; promote completed drafts to pending.
-- Mark pending invoices paid and filter by multiple statuses.
-- Light and dark themes; invoice and theme persistence across refreshes.
-- Keyboard navigation, labelled fields, validation announcements, and modal focus handling.
+- Create invoices or save incomplete drafts, then edit them later.
+- Add and remove line items, with calculated totals and payment due dates.
+- Validate required fields, email addresses, quantities, and prices before saving a completed invoice.
+- Move completed drafts to pending, mark pending invoices as paid, and confirm before deleting.
+- Filter by multiple invoice statuses and open individual invoice detail routes.
+- Use responsive list, detail, and form layouts with mobile action bars.
+- Switch between light and dark themes, with invoices and theme preferences retained across refreshes.
+- Navigate with labelled controls, a skip-to-content link, and focus on the first invalid form field.
+
+## Tech Stack
+
+| Area | Technology |
+| --- | --- |
+| Framework | Next.js 16 (App Router), React 19 |
+| Language | TypeScript |
+| UI | Ant Design 6, custom CSS |
+| State and persistence | Zustand 5, localStorage |
+| Date input support | Day.js |
+| Testing | Node.js test runner, Cypress |
+| Tooling | pnpm, ESLint |
 
 ## Architecture
 
-`app/` owns routing and the server-rendered root layout. `/invoices/[id]` provides direct invoice links and handles missing records.
+The invoice feature groups its UI, business rules, and state together:
 
-`features/invoices/components/` contains the application shell, invoice list, detail screen, and shared create/edit form. Client boundaries are limited to interactive components. Existing button and status components under `app/_components/` provide reusable presentation.
+```text
+app/
+  invoices/[id]/            Invoice detail route
+  _components/             Reusable presentation components
+  _data.json               Initial invoice records
+  globals.css              Layout and responsive styles
+features/invoices/
+  components/              App shell, list, details, create/edit form
+  lib/invoice.ts           IDs, validation, dates, totals, formatting
+  store.ts                 Invoice actions, theme, persisted state
+public/assets/             Design assets
+tests/                     Invoice rule tests
+cypress/e2e/               Browser tests
+```
 
-`features/invoices/lib/invoice.ts` contains pure invoice rules: ID generation, validation, dates, totals, and formatting. `features/invoices/store.ts` owns state transitions and versioned persistence through Zustand. Browser hydration is explicit so saved records are restored before detail lookup or creation.
+Next.js handles routing and the root layout. Interactive components use client boundaries, and the invoice detail screen handles missing records.
 
-Ant Design `Form`, `Form.Item`, and `Form.List` own field state, rules, validation messages, and dynamic line items. `Input`, `InputNumber`, `DatePicker`, and `Select` provide the entry controls; incomplete drafts deliberately bypass validation. `Table`, `Tag`, `Empty`, `Avatar`, and `Button` supply shared presentation. `ConfigProvider` defines light/dark tokens and component defaults, with scoped overrides for drawer fields and button variants.
+Ant Design `Form`, `Form.Item`, and `Form.List` manage form fields, validation, and dynamic line items. Incomplete drafts bypass required-field validation. `ConfigProvider` supplies light/dark theme tokens and component defaults; custom CSS handles the supplied design's layout and responsive behavior.
 
-`app/globals.css` contains the remaining Figma layout, responsive behavior, and document-specific styles; native field, button-color, and table rules have been removed. Design assets live in `public/assets/`; the private Figma source remains ignored.
+Invoice calculations and validation helpers live separately from the UI in `lib/invoice.ts`. The Zustand store handles saving, deleting, marking pending invoices paid, and switching themes. Explicit hydration restores saved state before invoice lookup or creation.
 
-## Validation
+This is a frontend application. The store persists invoices and theme preferences under `invoice-app-v1` in localStorage, using `app/_data.json` as initial data. Clearing that storage resets the saved state.
 
-- `pnpm lint`
-- `pnpm exec tsc --noEmit`
-- `pnpm test`
-- `pnpm test:e2e:types`
-- `pnpm test:e2e`
-- `pnpm build`
+## Testing
 
-Tests cover date boundaries, monetary rounding, validation, and ID generation. Browser checks cover draft creation, refresh persistence, draft editing, status transitions, confirmation cancellation/deletion, filtering, and mobile light/dark presentation.
+| Command | Purpose |
+| --- | --- |
+| `pnpm lint` | ESLint checks |
+| `pnpm exec tsc --noEmit` | Application type checks |
+| `pnpm test` | Invoice rule tests |
+| `pnpm test:e2e:types` | Cypress type checks |
+| `pnpm test:e2e` | Cypress against a dedicated development server |
+| `pnpm test:e2e:production` | Build and run Cypress against a production server |
+| `pnpm build` | Production build |
 
-## Cypress end-to-end tests
+Unit tests cover date boundaries, monetary rounding, invoice validation, and ID generation. The Cypress suite contains **19 tests across three specs**, covering invoice creation and editing, drafts, status changes, filtering, deletion, missing records, persistence, and layouts at mobile (375px), tablet (768px), and desktop (1440px) widths.
 
-`pnpm test:e2e` starts a dedicated development server at `http://localhost:3100`, waits for it to become ready, runs Cypress headlessly in Chrome, and stops the server afterward. Install Chrome before running these scripts. The test server uses `.next-e2e` so it can run alongside the regular app on port 3000.
+The E2E scripts require Chrome, start a server on `http://localhost:3100`, run Cypress, and stop the server afterward. They use `.next-e2e` to keep the test build separate from the regular app. Tests initialize independent fixture data before hydration and clear browser storage between tests.
 
-`pnpm test:e2e:production` builds the app in the same isolated directory and runs the suite against a production server. Use this for release checks or CI.
+For interactive debugging, start `pnpm dev --port 3100`, then run `pnpm cypress:open` in another terminal. If the Cypress binary is missing, run `pnpm exec cypress install`.
 
-For interactive debugging, start `pnpm dev --port 3100` in one terminal, then run `pnpm cypress:open` in another. `pnpm cypress:run` runs against an already running server. Override the base URL when needed, for example `pnpm cypress:run --config baseUrl=http://localhost:3000`.
+## Frontend Mentor Attribution
 
-The 19 tests in three specs under `cypress/e2e/` cover:
+This project implements the [Invoice app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/invoice-app-i7KaLTQjl). The visual design and supplied assets come from Frontend Mentor; this repository contains the application implementation. The private Figma source is excluded from version control.
 
-- List/detail navigation, combined status filters, empty states, missing records, marking paid, and deletion with cancellation and confirmation.
-- Required-field focus, invalid email and numeric values, incomplete drafts, generated IDs, invoice creation, line item changes, totals/due dates, cancelled edits, draft promotion, and editing paid invoices.
-- Mobile (375px), tablet (768px), and desktop (1440px) layouts, horizontal overflow, visible actions, form bounds, and theme persistence.
+## Run Locally
 
-Each test starts with independent fixture records installed before browser hydration. Cypress runs in its own browser, and storage is cleared between tests, preserving the invoices in your normal browser. Tests use retryable assertions instead of fixed delays and do not suppress application errors. Failure screenshots are saved under `cypress/screenshots/` and ignored by Git.
+```sh
+pnpm install
+pnpm dev
+```
 
-The Cypress install script is explicitly approved in `pnpm-workspace.yaml`. If the package is installed but its browser binary is missing, run `pnpm exec cypress install`.
-
-## Storage
-
-Although backend API integration is possible. This is a frontend application. Invoices are saved in this browser under `invoice-app-v1` in localStorage and seeded from `app/_data.json` on first use. Clearing browser storage resets them. Data is not synchronized between devices, and Save & Send sets an invoice to pending without sending an email.
+Open [localhost:3000](http://localhost:3000). For a production build, run `pnpm build`, then `pnpm start`.
